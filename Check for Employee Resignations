@@ -1,0 +1,14 @@
+# Import the Active Directory module
+Import-Module ActiveDirectory
+
+# Set the date to one month ago
+$oneMonthAgo = (Get-Date).AddMonths(-1)
+
+# Find accounts that have been disabled in the last month
+$disabledAccounts = Get-ADUser -Filter {Enabled -eq $false -and AccountExpirationDate -ge $oneMonthAgo} -Property DisplayName, Office, AccountExpirationDate
+
+# Create a custom object to store the results
+$results = $disabledAccounts | Select-Object DisplayName, Office
+
+# Output the results
+$results | Format-Table -AutoSize
